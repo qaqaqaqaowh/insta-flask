@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_login import LoginManager
 ######################################
 #### SET UP OUR SQLite DATABASE #####
 ####################################
@@ -11,6 +12,8 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 # print(basedir)
 
 app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
 # Connects our Flask App to our Database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
