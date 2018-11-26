@@ -1,0 +1,13 @@
+<table>
+  <tr>
+    <th>Profile Image</th>
+    <th>Email</th>
+  </tr>
+  <tr>
+    <td><img src={{ user.profile_img }}></td>
+    <td>{{ user.email }}</td>
+  </tr>
+</table>
+{% if current_user.logged_in %}
+  <a href="{{url_for('users.edit')}}">Edit Profile</a>
+{% endif %}

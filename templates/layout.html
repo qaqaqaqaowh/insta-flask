@@ -4,8 +4,27 @@
 	<title></title>
 </head>
 <body>
-	<a href="{{url_for('index')}}"><img src="../static/main.png" style="width: 200px;"></a>
-	<img src="../static/flask.png" style="width: 200px;">
+	<a href="{{url_for('index')}}"><img src="/static/main.png" style="width: 200px;"></a>
+	<img src="/static/flask.png" style="width: 200px;">
+	{% with messages = get_flashed_messages() %}
+  		{% if messages %}
+			<ul class=flashes>
+			{% for message in messages %}
+				<li>{{ message }}</li>
+			{% endfor %}
+			</ul>
+  		{% endif %}
+	{% endwith %}
+	{% if current_user.logged_in %}
+  	<h2><a href="{{ url_for('users.show', id=current_user.id) }}">{{ current_user.email }}</a></h2>
+		<form action="{{ url_for('sessions.destroy') }}" method="POST">
+			<input type="hidden" value="DELETE" name="_method" />
+			<input type="submit" value="Log Out"/>
+		</form>
+	{% else %}
+		<a href="{{url_for('sessions.new')}}">Login</a>
+		<a href="{{url_for('users.new')}}">Sign Up</a>
+	{% endif %}
 	{{render() | safe}}
 </body>
 </html>
