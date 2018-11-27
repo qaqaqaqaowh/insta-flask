@@ -6,8 +6,7 @@ from init import login_manager, db
 from wtforms import StringField, PasswordField, BooleanField, FileField
 from flask_wtf import FlaskForm
 from helpers.csrf import csrf_validate
-from google.cloud import storage
-import os
+from helpers.image_uploader import upload_image
 
 
 @login_manager.user_loader
@@ -50,7 +49,7 @@ def create():
         return render("users/new.html", form=form)
 
 
-@users_blueprint.route("/users/<id>", methods=["GET"])
+@users_blueprint.route("/<id>", methods=["GET"])
 def show(id):
     user = User.query.get(id)
     if user and (not user.is_private or current_user.id == user.id):
@@ -59,27 +58,20 @@ def show(id):
         return render("404.html")
 
 
-@users_blueprint.route("/user/edit", methods=["GET"])
+@users_blueprint.route("/edit", methods=["GET"])
 def edit():
     form = EditForm()
     form.is_private.data = current_user.is_private
     return render("users/edit.html", form=form)
 
 
-@users_blueprint.route("/users/update", methods=["POST"])
+@users_blueprint.route("/update", methods=["POST"])
 def update():
     if request.form.get("_method") == "PUT":
         form = EditForm()
         image = form.image.data
         if image:
-            gcs = storage.Client()
-            bucket = gcs.get_bucket(os.environ.get("GCS_BUCKET"))
-            blob = bucket.blob(image.filename)
-            blob.upload_from_string(
-                image.read(),
-                content_type=image.content_type
-            )
-            current_user.profile_img = blob.public_url
+            current_user.profile_img = upload_image(image)
         if form.password.data == form.password_conf.data:
             current_user.is_private = form.is_private.data
             current_user.change_password(

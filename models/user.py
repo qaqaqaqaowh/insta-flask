@@ -1,6 +1,6 @@
 from init import db, Model
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.orm import validates
+from sqlalchemy.orm import validates, relationship
 from sqlalchemy.ext.hybrid import hybrid_property
 from flask_login import UserMixin
 from helpers.validation import prepare_validation
@@ -16,6 +16,7 @@ class User(Model, db.Model, UserMixin):
     is_private = db.Column(db.Boolean, default=False)
     profile_img = db.Column(db.Text, nullable=False,
                             default='/static/download.png')
+    images = relationship("Image", backref="user")
 
     def __init__(self, email, password):
         self.email = email

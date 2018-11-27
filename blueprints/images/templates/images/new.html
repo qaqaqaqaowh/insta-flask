@@ -1,0 +1,10 @@
+<h2>Add New Image</h2>
+
+<form action='{{url_for("images.create")}}' method="POST" enctype="multipart/form-data">
+  {{ form.csrf_token }}
+  {{ form.image.label }}
+  {{ form.image() }}
+  {{ form.caption.label }}
+  {{ form.caption() }}
+  <input type='submit' value='Upload'>
+</form>

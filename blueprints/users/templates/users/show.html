@@ -4,10 +4,19 @@
     <th>Email</th>
   </tr>
   <tr>
-    <td><img src={{ user.profile_img }}></td>
+    <td><img style="width: 200px;" src={{ user.profile_img }}></td>
     <td>{{ user.email }}</td>
   </tr>
 </table>
-{% if current_user.logged_in %}
+<div>
+  {% for image in user.images %}
+    <div style="text-align: center;">
+      <img src="{{image.url}}" width="100px"/>
+      <p>{{ image.caption }}</p>
+    </div>
+  {% endfor %}
+</div>
+{% if user.logged_in %}
+  <a href="{{url_for('images.new')}}">Upload Image</a>
   <a href="{{url_for('users.edit')}}">Edit Profile</a>
 {% endif %}
