@@ -10,8 +10,10 @@ def upload_image(img):
         gcs = storage.Client()
     else:
         from google.oauth2 import service_account
-        gcs = storage.Client(credentials=service_account.Credentials.from_service_account_info(
-            json.load(io.StringIO(os.environ.get("GOOGLE_APPLICATION_CREDENTIALS")))))
+        cred = service_account.Credentials.from_service_account_info(
+            json.load(io.StringIO(os.environ.get(
+                "GOOGLE_APPLICATION_CREDENTIALS"))))
+        gcs = storage.Client(project=cred.project_id, credentials=cred)
     bucket = gcs.get_bucket(os.environ.get("GCS_BUCKET"))
     blob = bucket.blob(img.filename)
     blob.upload_from_string(
