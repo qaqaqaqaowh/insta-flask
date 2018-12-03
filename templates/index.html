@@ -1,1 +1,12 @@
 <h1>Welcome to Insta Stories</h1>
+{% if current_user.logged_in %}
+  {% for image in current_user.feeds %}
+    <div style="text-align: center;">
+      <p style="text-align: left;">
+        {{ image.user.email }}
+      </p>
+      <img src="{{image.url}}">
+      <p>{{ image.caption }}</p>
+    </div>
+  {% endfor %}
+{% endif %}

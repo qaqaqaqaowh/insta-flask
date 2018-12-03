@@ -7,6 +7,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, FileField
 from models.image import Image
 from helpers.image_uploader import upload_image
+from helpers.payment import gateway
 
 images_blueprint = Blueprint(
     "images", __name__, template_folder="templates")
@@ -44,6 +45,7 @@ def create():
 @images_blueprint.route("/<id>", methods=["GET"])
 def show(id):
     image = Image.query.get(id)
+    token = gateway.client_token.generate()
     if image:
-        return render("images/show", image=image)
+        return render("images/show.html", image=image, token=token)
     return render("404.html")

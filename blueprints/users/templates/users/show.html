@@ -8,15 +8,50 @@
     <td>{{ user.email }}</td>
   </tr>
 </table>
-<div>
-  {% for image in user.images %}
-    <div style="text-align: center;">
-      <img src="{{image.url}}" width="100px"/>
-      <p>{{ image.caption }}</p>
-    </div>
-  {% endfor %}
-</div>
-{% if user.logged_in %}
-  <a href="{{url_for('images.new')}}">Upload Image</a>
-  <a href="{{url_for('users.edit')}}">Edit Profile</a>
+{% if user == current_user or not user.is_private %}
+  <div style="display: flex;">
+    {% for image in user.images %}
+      <div style="text-align: center; width: 100px; border: 2px solid black; margin: 2px;">
+        <a href="{{url_for('images.show', id=image.id)}}">
+          <img src="{{image.url}}" width="100px"/>
+          <p>{{ image.caption }}</p>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% if current_user.logged_in %}
+  {% if user == current_user %}
+    {% if user.follower_requests %}
+      <h2>Follower Requests</h2>
+      <table>
+        <tr>
+          <th>Email</th>
+        <tr>
+        {% for req in user.follower_requests %}
+          <tr>
+            <td>{{ req.email }}</td>
+            <td>
+              <form action="{{url_for('followings.accept', id=req.id)}}" method="POST">
+                <input type="submit" value="Accept"/>
+              </form>
+            </td>
+            <td>
+              <form action="{{url_for('followings.decline', id=req.id)}}" method="POST">
+                <input type="submit" value="Decline"/>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% endif %}
+    <a href="{{url_for('images.new')}}">Upload Image</a>
+    <a href="{{url_for('users.edit')}}">Edit Profile</a>
+  {% else %}
+    {% if not current_user in user.follower_requests %}
+      <form action='{{url_for("followings.follow", id=user.id)}}' method="POST">
+        <input type="submit" value="Follow" />
+      </form>
+    {% endif %}
+  {% endif %}
 {% endif %}

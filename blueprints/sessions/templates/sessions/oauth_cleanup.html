@@ -1,0 +1,9 @@
+<h2>Please set a default Password</h2>
+<form action="{{url_for('sessions.oauth_cleanup_post')}}" method="POST">
+  {{ form.csrf_token }}
+  {{ form.password.label }}
+  {{ form.password() }}
+  {{ form.password_conf.label }}
+  {{ form.password_conf() }}
+  <input type="submit" value="Set"/>
+</form>

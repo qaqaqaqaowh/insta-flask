@@ -3,6 +3,13 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
+from authlib.flask.client import OAuth
+from helpers.oauth.google import register_google_oauth
+
+oauth = OAuth()
+
+register_google_oauth(oauth)
+
 ######################################
 #### SET UP OUR SQLite DATABASE #####
 ####################################
@@ -22,6 +29,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+oauth.init_app(app)
 
 
 class Model:

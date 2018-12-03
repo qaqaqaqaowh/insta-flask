@@ -52,7 +52,7 @@ def create():
 @users_blueprint.route("/<id>", methods=["GET"])
 def show(id):
     user = User.query.get(id)
-    if user and (not user.is_private or current_user.id == user.id):
+    if user:
         return render("users/show.html", user=user)
     else:
         return render("404.html")
@@ -60,6 +60,8 @@ def show(id):
 
 @users_blueprint.route("/edit", methods=["GET"])
 def edit():
+    if not current_user.is_valid:
+        return redirect(url_for("sessions.oauth_cleanup"))
     form = EditForm()
     form.is_private.data = current_user.is_private
     return render("users/edit.html", form=form)

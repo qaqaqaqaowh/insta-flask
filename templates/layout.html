@@ -24,6 +24,7 @@
 	{% else %}
 		<a href="{{url_for('sessions.new')}}">Login</a>
 		<a href="{{url_for('users.new')}}">Sign Up</a>
+		<a href="{{url_for('sessions.google')}}">With Google</a>
 	{% endif %}
 	{{render() | safe}}
 </body>
