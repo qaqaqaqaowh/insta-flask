@@ -39,3 +39,11 @@ def decline(id):
     follower = User.query.get(id)
     follower.unfollow(current_user)
     return redirect(url_for('users.show', id=current_user.id), code=200)
+
+
+@followings_blueprint.route('/<id>/unfollow', methods=["POST"])
+@login_required
+def unfollow(id):
+    user = User.query.get(id)
+    current_user.unfollow(user)
+    return redirect(url_for('users.show', id=user.id), code=200)
