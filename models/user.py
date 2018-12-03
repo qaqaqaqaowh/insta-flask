@@ -30,7 +30,7 @@ class User(Model, db.Model, UserMixin):
         "User", secondary="followings", primaryjoin="and_(User.id==Following.user_id, Following.accepted==False)", secondaryjoin=id == db.foreign(Following.follower_id))
 
     feeds = relationship("Image", secondary="followings",
-                         primaryjoin="and_(User.id==Following.follower_id, Following.accepted==True)", secondaryjoin=id == db.foreign(Image.user_id), order_by="desc(Image.id)")
+                         primaryjoin="and_(User.id==Following.follower_id, Following.accepted==True)", secondaryjoin="Image.user_id == Following.user_id", order_by="desc(Image.id)")
 
     def __init__(self, email, password, is_valid=None):
         if is_valid == None:
